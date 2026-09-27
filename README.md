@@ -8,18 +8,25 @@ Inspired by Polytopia and Age of Empires, with rock-paper-scissors unit counters
 
 ## Play it
 
-Open `dist/tessera.html` in any modern browser — that's the whole game, art, music and all.
+**In your browser: [3ebby15-dev.github.io/tessera-tribes](https://3ebby15-dev.github.io/tessera-tribes/)** — served straight from this repo by GitHub Pages.
+
+Or open `index.html` from a local clone; it is the entire game, art, music and all, in one file:
 
 ```bash
 git clone https://github.com/3ebby15-dev/tessera-tribes.git
 cd tessera-tribes
-# macOS
-open dist/tessera.html
-# Linux
-xdg-open dist/tessera.html
+open index.html        # macOS  (Linux: xdg-open index.html)
 ```
 
-Works with mouse, keyboard or touch. Everything is saved in `localStorage`, so your game, your Wins and your shop unlocks stay on the device you played on.
+Works with mouse, keyboard or touch. Everything is saved in `localStorage`, so your game, your Wins and your shop unlocks stay on the device and browser you played on.
+
+### Turning Pages on (once per fork)
+
+1. **Settings → Pages**
+2. **Source:** Deploy from a branch
+3. **Branch:** `main`, folder `/ (root)` → **Save**
+
+A minute later the game is live at `https://<your-username>.github.io/tessera-tribes/`. `index.html` is committed, so nothing has to build on GitHub's side — after changing anything in `src/`, run `./build.sh` and commit the regenerated `index.html`.
 
 ## What's in it
 
@@ -78,10 +85,10 @@ Works with mouse, keyboard or touch. Everything is saved in `localStorage`, so y
 The game ships as a single HTML file assembled from the parts in `src/`:
 
 ```bash
-./build.sh          # writes dist/tessera.html and dist/test.html
+./build.sh          # writes index.html (and dist/ copies)
 ```
 
-`dist/tessera.html` is the shippable file. `dist/test.html` is the same thing wrapped in a minimal page skeleton, used by the headless tests.
+`index.html` at the repository root is the standalone page — what GitHub Pages serves and what you open locally. `dist/tessera.html` is the same game without the page skeleton, for hosts that supply their own, and `dist/test.html` is the copy the headless tests load. Only `index.html` is committed; `dist/` is ignored.
 
 ### Project layout
 
@@ -130,6 +137,6 @@ node test/run_bal2.js 30                    # per-tribe win rates
 
 ## Notes
 
-- No backend. Saves, Wins, shop unlocks and challenge scores live in `localStorage`; the challenge leaderboard is generated locally from the week's seed.
+- No backend, no build step on the server — GitHub Pages just serves the file. Saves, Wins, shop unlocks and challenge scores live in `localStorage`; the challenge leaderboard is generated locally from the week's seed.
 - USD prices in the shop are display-only — no payment processing is wired up, so those buttons explain that and offer the Wins price instead.
 - All art is drawn with the Canvas 2D API at runtime and all music is synthesised with the Web Audio API. The only external asset is two Google Fonts stylesheets, and the game falls back to system fonts without them.
