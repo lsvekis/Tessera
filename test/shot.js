@@ -1,0 +1,20 @@
+const { chromium } = require('playwright'); const path = require('path');
+(async () => {
+  const out = process.argv[2] || '/tmp';
+  const browser = await chromium.launch();
+  const page = await browser.newPage({ viewport: { width: 1280, height: 800 } });
+  const errors = []; page.on('pageerror', e => errors.push(e.message));
+  await page.goto('file://' + path.resolve('dist/test.html')); await page.waitForTimeout(2500);
+  await page.screenshot({ path: out + '/menu.png' });
+  await page.mouse.click(5, 5);
+  await page.evaluate(() => { UIState.settings.speed = 0; UIState.opts = { tribe: 'sunspear', opponents: 3, size: 'medium', difficulty: 'normal', mode: 'domination' }; startGame(); });
+  await page.waitForTimeout(7000);
+  await page.evaluate(() => { if (UIState.modal) closeModal(); });
+  await page.waitForTimeout(300);
+  await page.screenshot({ path: out + '/game.png' });
+  await page.evaluate(() => { const u = G.units.find(u => u.owner === G.human); if (u) { selectUnit(u); } });
+  await page.waitForTimeout(400);
+  await page.screenshot({ path: out + '/unit.png' });
+  console.log('errors', errors);
+  await browser.close();
+})();
